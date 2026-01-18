@@ -6,11 +6,9 @@ engine = create_engine(DATABASE_URL)
 
 def populate_data():
     with engine.connect() as connection:
-        print("🔌 Połączono z bazą danych!")
         
         trans = connection.begin()
         try:
-            print("📦 Dodawanie kategorii...")
             connection.execute(text("""
                 INSERT INTO categories (name, description) VALUES 
                 ('Elektronika', 'Sprzęt elektroniczny i gadżety'),
@@ -18,7 +16,6 @@ def populate_data():
                 ON CONFLICT (name) DO NOTHING;
             """))
 
-            print("🍎 Dodawanie produktów...")
             connection.execute(text("""
                 INSERT INTO products (name, sku, category_id, price, stock_quantity) 
                 VALUES 
@@ -29,11 +26,10 @@ def populate_data():
             """))
             
             trans.commit()
-            print("✅ Sukces! Dane zostały dodane.")
             
         except Exception as e:
             trans.rollback()
-            print(f"❌ Błąd: {e}")
+            print(f"Error: {e}")
 
 if __name__ == "__main__":
     populate_data()
